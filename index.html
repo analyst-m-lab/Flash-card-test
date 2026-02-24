@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartes Éclair — フランス語フラッシュカード</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1209;
+    --cream: #f5f0e8;
+    --gold: #c9a84c;
+    --gold-light: #e8d5a3;
+    --terracotta: #c4553a;
+    --sage: #5a7a5a;
+    --shadow: rgba(26,18,9,0.15);
+    --card-bg: #fffdf7;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 90%, rgba(196,85,58,0.08) 0%, transparent 50%);
+  }
+
+  header {
+    text-align: center;
+    padding: 2.5rem 1rem 1rem;
+    border-bottom: 1px solid var(--gold-light);
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  header h1 span { color: var(--gold); font-style: italic; }
+
+  header p {
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: #6b5c3e;
+    margin-top: 0.3rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  .tabs {
+    display: flex;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--gold-light);
+  }
+
+  .tab {
+    padding: 0.7rem 1.4rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: #8a7355;
+    transition: all 0.2s;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+  }
+
+  .tab.active { color: var(--ink); border-bottom-color: var(--gold); }
+  .tab:hover:not(.active) { color: var(--ink); }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Form */
+  .form-card {
+    background: var(--card-bg);
+    border: 1px solid var(--gold-light);
+    border-radius: 12px;
+    padding: 1.8rem;
+    box-shadow: 0 4px 20px var(--shadow);
+  }
+
+  .form-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-group.full { grid-column: 1/-1; }
+
+  label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #8a7355;
+  }
+
+  input, select, textarea {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    padding: 0.65rem 0.9rem;
+    border: 1px solid var(--gold-light);
+    border-radius: 8px;
+    background: #fffef9;
+    color: var(--ink);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    width: 100%;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.15);
+  }
+
+  .category-row { display: flex; gap: 0.6rem; }
+  .category-row input { flex: 1; }
+
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    padding: 0.65rem 1.4rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--cream);
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 0.95rem;
+    margin-top: 0.5rem;
+  }
+
+  .btn-primary:hover { background: #2d1f0a; transform: translateY(-1px); box-shadow: 0 4px 12px var(--shadow); }
+  .btn-sm { padding: 0.45rem 0.9rem; font-size: 0.8rem; }
+
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--gold-light);
+    color: var(--ink);
+  }
+
+  .btn-outline:hover { border-color: var(--gold); background: rgba(201,168,76,0.08); }
+
+  .cat-badges { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.5rem; }
+
+  .cat-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 20px;
+    background: var(--gold-light);
+    color: #5a4020;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1.5px solid transparent;
+  }
+
+  .cat-badge:hover { border-color: var(--gold); }
+
+  /* Flashcard controls */
+  .fc-controls {
+    background: var(--card-bg);
+    border: 1px solid var(--gold-light);
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+  }
+
+  .fc-control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    flex: 1;
+    min-width: 140px;
+  }
+
+  .toggle-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+  .toggle-btn {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 6px;
+    border: 1.5px solid var(--gold-light);
+    background: transparent;
+    cursor: pointer;
+    color: var(--ink);
+    transition: all 0.18s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .toggle-btn.active { background: var(--ink); color: white; border-color: var(--ink); }
+  .card-count { font-size: 0.8rem; color: #8a7355; white-space: nowrap; align-self: flex-end; padding-bottom: 0.4rem; }
+
+  /* Mode switcher */
+  .mode-switcher {
+    display: flex;
+    margin-bottom: 1rem;
+    border: 1.5px solid var(--gold-light);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .mode-btn {
+    flex: 1;
+    padding: 0.55rem 0.5rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #8a7355;
+    transition: all 0.18s;
+    font-family: 'DM Sans', sans-serif;
+    border-right: 1.5px solid var(--gold-light);
+  }
+
+  .mode-btn:last-child { border-right: none; }
+  .mode-btn.active { background: var(--ink); color: white; }
+  .mode-btn:hover:not(.active) { background: rgba(201,168,76,0.1); color: var(--ink); }
+
+  /* Progress bar */
+  .progress-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--gold-light);
+    border-radius: 2px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+
+  /* Score bar */
+  .score-bar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.7rem 1rem;
+    background: var(--card-bg);
+    border: 1px solid var(--gold-light);
+    border-radius: 8px;
+    font-size: 0.82rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .score-item { display: flex; align-items: center; gap: 0.4rem; font-weight: 500; }
+
+  .score-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .dot-ok { background: var(--sage); }
+  .dot-ng { background: var(--terracotta); }
+  .dot-rem { background: var(--gold); }
+  .score-bar .spacer { flex: 1; }
+
+  .retry-badge {
+    font-size: 0.75rem;
+    padding: 0.28rem 0.8rem;
+    background: var(--terracotta);
+    color: white;
+    border-radius: 20px;
+    cursor: pointer;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.18s;
+    white-space: nowrap;
+  }
+
+  .retry-badge:hover:not(:disabled) { background: #a83e27; }
+  .retry-badge:disabled { background: #ccc; cursor: default; }
+
+  /* Retry banner */
+  .retry-banner {
+    background: rgba(196,85,58,0.1);
+    border: 1.5px solid rgba(196,85,58,0.3);
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    font-size: 0.82rem;
+    color: var(--terracotta);
+    text-align: center;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    display: none;
+  }
+
+  .retry-banner.show { display: block; }
+
+  /* Card arena */
+  .card-arena {
+    position: relative;
+    height: 280px;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ghost-card {
+    position: absolute;
+    width: calc(100% - 20px);
+    max-width: 460px;
+    height: 260px;
+    background: var(--card-bg);
+    border: 1px solid var(--gold-light);
+    border-radius: 16px;
+    pointer-events: none;
+  }
+
+  .ghost-card.g1 { transform: translateY(8px) scale(0.97); opacity: 0.5; z-index: 1; }
+  .ghost-card.g2 { transform: translateY(4px) scale(0.985); opacity: 0.7; z-index: 2; }
+
+  /* Swipe card */
+  .swipe-card {
+    position: absolute;
+    width: 100%;
+    max-width: 480px;
+    height: 260px;
+    z-index: 10;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+  }
+
+  .swipe-card:active { cursor: grabbing; }
+  .swipe-card.is-flying { pointer-events: none; }
+
+  .swipe-card-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.5s cubic-bezier(0.4,0.2,0.2,1);
+    border-radius: 16px;
+    box-shadow: 0 8px 40px var(--shadow);
+  }
+
+  .swipe-card-inner.flipped { transform: rotateY(180deg); }
+
+  .card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    background: var(--card-bg);
+    border: 1px solid var(--gold-light);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    gap: 0.4rem;
+    overflow: hidden;
+  }
+
+  .card-face.back { transform: rotateY(180deg); background: #fffbf0; }
+
+  /* Drag overlay stamp */
+  .stamp-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4.5rem;
+    font-weight: 900;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.08s;
+    z-index: 5;
+  }
+
+  .stamp-overlay.ok-stamp {
+    background: rgba(90,122,90,0.15);
+    color: var(--sage);
+    border: 3px solid var(--sage);
+  }
+
+  .stamp-overlay.ng-stamp {
+    background: rgba(196,85,58,0.15);
+    color: var(--terracotta);
+    border: 3px solid var(--terracotta);
+  }
+
+  .fc-lang-label { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: #b09060; font-weight: 500; }
+  .fc-text { font-family: 'Playfair Display', serif; font-size: clamp(1.1rem, 3.5vw, 1.75rem); line-height: 1.4; color: var(--ink); }
+
+  .fc-category {
+    font-size: 0.72rem;
+    color: white;
+    background: var(--gold);
+    padding: 0.2rem 0.7rem;
+    border-radius: 12px;
+    font-weight: 500;
+    margin-top: 0.3rem;
+  }
+
+  .fc-hint { font-size: 0.7rem; color: #b09060; margin-top: 0.5rem; font-style: italic; }
+
+  /* Swipe hint row */
+  .swipe-hint-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0.5rem;
+    margin-bottom: 0.6rem;
+    font-size: 0.8rem;
+    color: #b09060;
+  }
+
+  .swipe-hint-side { display: flex; align-items: center; gap: 0.4rem; font-weight: 500; }
+  .hint-x { color: var(--terracotta); font-size: 1.1rem; }
+  .hint-o { color: var(--sage); font-size: 1.1rem; }
+
+  /* Swipe action buttons */
+  .swipe-btns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .swipe-action-btn {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    border: 2px solid;
+    background: var(--card-bg);
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: all 0.18s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 2px 10px var(--shadow);
+  }
+
+  .swipe-action-btn.ng { border-color: var(--terracotta); color: var(--terracotta); }
+  .swipe-action-btn.ng:hover { background: var(--terracotta); color: white; transform: scale(1.08); }
+
+  .swipe-action-btn.flip {
+    width: 44px; height: 44px;
+    border-color: var(--gold-light);
+    color: #b09060;
+    font-size: 1rem;
+  }
+
+  .swipe-action-btn.flip:hover { border-color: var(--gold); color: var(--ink); }
+
+  .swipe-action-btn.ok { border-color: var(--sage); color: var(--sage); }
+  .swipe-action-btn.ok:hover { background: var(--sage); color: white; transform: scale(1.08); }
+
+  .swipe-counter { font-family: 'Playfair Display', serif; font-size: 0.95rem; color: #5a4020; min-width: 60px; text-align: center; }
+
+  /* Classic mode */
+  .fc-wrapper { perspective: 1000px; height: 260px; margin-bottom: 1.2rem; cursor: pointer; }
+
+  .fc-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.4,0.2,0.2,1);
+  }
+
+  .fc-inner.flipped { transform: rotateY(180deg); }
+
+  .fc-face-classic {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    background: var(--card-bg);
+    border: 1px solid var(--gold-light);
+    border-radius: 16px;
+    box-shadow: 0 8px 40px var(--shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    gap: 0.5rem;
+  }
+
+  .fc-face-classic.back { transform: rotateY(180deg); background: #fffbf0; }
+
+  .fc-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .nav-btn {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gold-light);
+    background: var(--card-bg);
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: var(--ink);
+    transition: all 0.18s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-btn:hover:not(:disabled) { border-color: var(--gold); background: rgba(201,168,76,0.1); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+
+  .nav-counter { font-family: 'Playfair Display', serif; font-size: 1rem; min-width: 80px; text-align: center; color: #5a4020; }
+
+  .audio-row { display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem; }
+
+  /* Result screen */
+  .result-screen {
+    background: var(--card-bg);
+    border: 1px solid var(--gold-light);
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    box-shadow: 0 8px 40px var(--shadow);
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+  .result-screen h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 0.4rem; }
+  .result-screen p { font-size: 0.9rem; color: #6b5c3e; margin-bottom: 1.5rem; }
+
+  .result-stats { display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; }
+
+  .result-stat { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; }
+  .result-stat .num { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; line-height: 1; }
+  .result-stat .lbl { font-size: 0.75rem; color: #8a7355; letter-spacing: 0.05em; }
+  .num-ok { color: var(--sage); }
+  .num-ng { color: var(--terracotta); }
+
+  .result-btns { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
+  .result-btns .btn { min-width: 140px; }
+
+  .fc-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 260px;
+    background: var(--card-bg);
+    border: 2px dashed var(--gold-light);
+    border-radius: 16px;
+    color: #b09060;
+    gap: 0.5rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .fc-empty .icon { font-size: 2.5rem; }
+  .fc-empty p { font-size: 0.9rem; }
+
+  /* List */
+  .list-controls { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; margin-bottom: 1rem; }
+  .list-controls select { width: auto; flex: 1; min-width: 130px; }
+  .card-list { display: flex; flex-direction: column; gap: 0.7rem; }
+
+  .card-item {
+    background: var(--card-bg);
+    border: 1px solid var(--gold-light);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    animation: slideIn 0.25s ease;
+  }
+
+  @keyframes slideIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+
+  .card-item-texts { flex: 1; }
+  .card-item-fr { font-family: 'Playfair Display', serif; font-size: 1rem; margin-bottom: 0.2rem; }
+  .card-item-ja { font-size: 0.88rem; color: #6b5c3e; }
+  .card-item-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem; }
+
+  .btn-delete { background: none; border: none; cursor: pointer; font-size: 1rem; color: #c4553a66; transition: color 0.15s; padding: 0.2rem; }
+  .btn-delete:hover { color: var(--terracotta); }
+  .empty-list { text-align: center; color: #b09060; font-style: italic; padding: 2rem; font-size: 0.9rem; }
+
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--cream);
+    padding: 0.7rem 1.4rem;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    z-index: 999;
+    white-space: nowrap;
+  }
+
+  .toast.show { opacity: 1; }
+
+  @media (max-width: 480px) {
+    .form-row { grid-template-columns: 1fr; }
+    .fc-controls { flex-direction: column; }
+    .result-stats { gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Cartes <span>Éclair</span></h1>
+  <p>フランス語フラッシュカード</p>
+</header>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('add')">✏️ カードを追加</button>
+    <button class="tab" onclick="switchTab('flash')">🃏 フラッシュカード</button>
+    <button class="tab" onclick="switchTab('list')">📋 カード一覧</button>
+  </div>
+
+  <!-- ADD PANEL -->
+  <div id="panel-add" class="panel active">
+    <div class="form-card">
+      <h2>🌿 新しいカードを登録</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label>フランス語文章 FR</label>
+          <input type="text" id="inp-fr" placeholder="Bonjour, comment ça va ?" />
+        </div>
+        <div class="form-group">
+          <label>日本語訳 JA</label>
+          <input type="text" id="inp-ja" placeholder="こんにちは、元気ですか？" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full">
+          <label>カテゴリ</label>
+          <div class="category-row">
+            <input type="text" id="inp-cat" placeholder="カテゴリ名（例：挨拶、動詞、旅行）" list="cat-list" />
+            <datalist id="cat-list"></datalist>
+          </div>
+          <div class="cat-badges" id="cat-suggestions"></div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="addCard()">＋ カードを登録する</button>
+    </div>
+  </div>
+
+  <!-- FLASHCARD PANEL -->
+  <div id="panel-flash" class="panel">
+
+    <div class="fc-controls">
+      <div class="fc-control-group">
+        <label>カテゴリフィルター</label>
+        <select id="fc-cat-filter" onchange="applyFilters()"><option value="">すべて</option></select>
+      </div>
+      <div class="fc-control-group">
+        <label>開始言語</label>
+        <div class="toggle-row">
+          <button class="toggle-btn active" id="btn-lang-fr" onclick="setStartLang('fr')">🇫🇷 フランス語</button>
+          <button class="toggle-btn" id="btn-lang-ja" onclick="setStartLang('ja')">🇯🇵 日本語</button>
+        </div>
+      </div>
+      <div class="fc-control-group">
+        <label>シャッフル</label>
+        <div class="toggle-row">
+          <button class="toggle-btn" id="btn-shuffle" onclick="toggleShuffle()">🔀 シャッフル</button>
+        </div>
+      </div>
+      <div class="card-count" id="fc-count">0 枚</div>
+    </div>
+
+    <div class="mode-switcher">
+      <button class="mode-btn active" id="mode-swipe-btn" onclick="setMode('swipe')">👆 スワイプ ◯✕</button>
+      <button class="mode-btn" id="mode-classic-btn" onclick="setMode('classic')">🃏 クラシック</button>
+    </div>
+
+    <div class="retry-banner" id="retry-banner"></div>
+
+    <div class="score-bar" id="score-bar" style="display:none">
+      <div class="score-item"><span class="score-dot dot-ok"></span><span id="score-ok">0</span>&nbsp;◯</div>
+      <div class="score-item"><span class="score-dot dot-ng"></span><span id="score-ng">0</span>&nbsp;✕</div>
+      <div class="score-item"><span class="score-dot dot-rem"></span><span id="score-rem">0</span>&nbsp;残り</div>
+      <div class="spacer"></div>
+      <button class="retry-badge" id="retry-btn" onclick="startRetry()" disabled>✕のみ再テスト</button>
+    </div>
+
+    <div class="progress-bar"><div class="progress-fill" id="fc-progress"></div></div>
+
+    <div id="fc-main"></div>
+
+    <div class="audio-row">
+      <button class="btn btn-outline btn-sm" onclick="speakCurrent('fr')">🔊 フランス語で聴く</button>
+      <button class="btn btn-outline btn-sm" onclick="speakCurrent('ja')">🔊 日本語で聴く</button>
+    </div>
+
+  </div>
+
+  <!-- LIST PANEL -->
+  <div id="panel-list" class="panel">
+    <div class="list-controls">
+      <select id="list-cat-filter" onchange="renderList()"><option value="">すべてのカテゴリ</option></select>
+      <button class="btn btn-outline btn-sm" onclick="exportCards()">📥 エクスポート</button>
+    </div>
+    <div class="card-list" id="card-list"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let cards = JSON.parse(localStorage.getItem('cartes-eclair-v2') || '[]');
+let startLang = 'fr';
+let shuffleOn = false;
+let currentMode = 'swipe';
+
+// Swipe session
+let swipeQueue = [];
+let swipeOK    = [];
+let swipeNG    = [];
+let swipeIndex = 0;
+let swipeFlipped = false;
+let isRetryMode = false;
+
+// Classic mode
+let fcCards  = [];
+let fcIndex  = 0;
+let fcFlipped = false;
+
+// Drag
+let dragActive = false;
+let dragStartX = 0, dragStartY = 0, dragCurX = 0, dragCurY = 0;
+let boundMoveHandler = null, boundEndHandler = null;
+
+// ═══════════════════════════════════════════════
+// PERSIST
+// ═══════════════════════════════════════════════
+function save() {
+  localStorage.setItem('cartes-eclair-v2', JSON.stringify(cards));
+}
+
+// ═══════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  const idx = {add:0, flash:1, list:2}[name];
+  document.querySelectorAll('.tab')[idx].classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+  if (name === 'flash') { refreshCatFilter('fc-cat-filter'); applyFilters(); }
+  if (name === 'list')  { refreshCatFilter('list-cat-filter'); renderList(); }
+}
+
+// ═══════════════════════════════════════════════
+// CATEGORIES
+// ═══════════════════════════════════════════════
+function allCategories() {
+  return [...new Set(cards.map(c => c.cat).filter(Boolean))].sort();
+}
+
+function refreshCatFilter(id) {
+  const sel = document.getElementById(id);
+  const cur = sel.value;
+  const lbl = id === 'fc-cat-filter' ? 'すべて' : 'すべてのカテゴリ';
+  sel.innerHTML = `<option value="">${lbl}</option>`;
+  allCategories().forEach(cat => {
+    const o = document.createElement('option');
+    o.value = cat; o.textContent = cat;
+    if (cat === cur) o.selected = true;
+    sel.appendChild(o);
+  });
+  updateCatDatalist();
+  renderCatSuggestions();
+}
+
+function updateCatDatalist() {
+  const dl = document.getElementById('cat-list');
+  dl.innerHTML = '';
+  allCategories().forEach(cat => {
+    const o = document.createElement('option'); o.value = cat; dl.appendChild(o);
+  });
+}
+
+function renderCatSuggestions() {
+  const cont = document.getElementById('cat-suggestions');
+  const cats = allCategories();
+  cont.innerHTML = cats.length
+    ? cats.map(c => `<span class="cat-badge" onclick="document.getElementById('inp-cat').value='${c}'">${c}</span>`).join('')
+    : '';
+}
+
+// ═══════════════════════════════════════════════
+// ADD CARD
+// ═══════════════════════════════════════════════
+function addCard() {
+  const fr  = document.getElementById('inp-fr').value.trim();
+  const ja  = document.getElementById('inp-ja').value.trim();
+  const cat = document.getElementById('inp-cat').value.trim();
+  if (!fr || !ja) { showToast('フランス語と日本語を入力してください'); return; }
+  cards.push({ id: Date.now(), fr, ja, cat: cat || '' });
+  save();
+  document.getElementById('inp-fr').value = '';
+  document.getElementById('inp-ja').value = '';
+  document.getElementById('inp-cat').value = '';
+  showToast('✓ カードを登録しました');
+  renderCatSuggestions(); updateCatDatalist();
+}
+
+// ═══════════════════════════════════════════════
+// MODE / FILTERS
+// ═══════════════════════════════════════════════
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('mode-swipe-btn').classList.toggle('active', mode === 'swipe');
+  document.getElementById('mode-classic-btn').classList.toggle('active', mode === 'classic');
+  applyFilters();
+}
+
+function setStartLang(lang) {
+  startLang = lang;
+  document.getElementById('btn-lang-fr').classList.toggle('active', lang === 'fr');
+  document.getElementById('btn-lang-ja').classList.toggle('active', lang === 'ja');
+  applyFilters();
+}
+
+function toggleShuffle() {
+  shuffleOn = !shuffleOn;
+  document.getElementById('btn-shuffle').classList.toggle('active', shuffleOn);
+  applyFilters();
+}
+
+function applyFilters() {
+  const cat = document.getElementById('fc-cat-filter').value;
+  let filtered = cat ? cards.filter(c => c.cat === cat) : [...cards];
+  if (shuffleOn) filtered = shuffleArr(filtered);
+
+  isRetryMode = false;
+  document.getElementById('retry-banner').classList.remove('show');
+
+  if (currentMode === 'swipe') {
+    initSwipeSession(filtered);
+  } else {
+    document.getElementById('score-bar').style.display = 'none';
+    fcCards = filtered;
+    fcIndex = 0; fcFlipped = false;
+    document.getElementById('fc-count').textContent = fcCards.length + ' 枚';
+    renderClassic();
+  }
+}
+
+function shuffleArr(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ═══════════════════════════════════════════════
+// SWIPE SESSION
+// ═══════════════════════════════════════════════
+function initSwipeSession(arr) {
+  swipeQueue = [...arr];
+  swipeOK = []; swipeNG = [];
+  swipeIndex = 0; swipeFlipped = false;
+  document.getElementById('fc-count').textContent = swipeQueue.length + ' 枚';
+  updateScoreBar();
+  renderSwipe();
+}
+
+function startRetry() {
+  if (!swipeNG.length) return;
+  isRetryMode = true;
+  const banner = document.getElementById('retry-banner');
+  banner.textContent = `🔁 ✕カード ${swipeNG.length} 枚を再テスト中`;
+  banner.classList.add('show');
+  swipeQueue = shuffleArr([...swipeNG]);
+  swipeOK = []; swipeNG = [];
+  swipeIndex = 0; swipeFlipped = false;
+  document.getElementById('fc-count').textContent = swipeQueue.length + ' 枚';
+  updateScoreBar();
+  renderSwipe();
+}
+
+function updateScoreBar() {
+  const bar = document.getElementById('score-bar');
+  if (!swipeQueue.length && !swipeOK.length && !swipeNG.length) {
+    bar.style.display = 'none'; return;
+  }
+  bar.style.display = 'flex';
+  document.getElementById('score-ok').textContent = swipeOK.length;
+  document.getElementById('score-ng').textContent = swipeNG.length;
+  document.getElementById('score-rem').textContent = Math.max(0, swipeQueue.length - swipeIndex);
+  document.getElementById('retry-btn').disabled = swipeNG.length === 0;
+
+  const done = swipeOK.length + swipeNG.length;
+  const tot  = done + Math.max(0, swipeQueue.length - swipeIndex);
+  document.getElementById('fc-progress').style.width = (tot > 0 ? (done/tot)*100 : 0) + '%';
+}
+
+function renderSwipe() {
+  removeDragListeners();
+  const main = document.getElementById('fc-main');
+
+  if (swipeIndex >= swipeQueue.length) { showResult(); return; }
+
+  const card     = swipeQueue[swipeIndex];
+  const remaining = swipeQueue.length - swipeIndex;
+  const frontText  = startLang === 'fr' ? card.fr : card.ja;
+  const backText   = startLang === 'fr' ? card.ja : card.fr;
+  const frontLabel = startLang === 'fr' ? '🇫🇷 Français' : '🇯🇵 日本語';
+  const backLabel  = startLang === 'fr' ? '🇯🇵 日本語' : '🇫🇷 Français';
+  const catTag     = card.cat ? `<span class="fc-category">${card.cat}</span>` : '';
+
+  const ghosts = remaining > 2
+    ? `<div class="ghost-card g1"></div><div class="ghost-card g2"></div>`
+    : remaining === 2 ? `<div class="ghost-card g2"></div>` : '';
+
+  main.innerHTML = `
+    <div class="swipe-hint-row">
+      <div class="swipe-hint-side"><span class="hint-x">✕</span> 左スワイプ</div>
+      <div class="swipe-counter">${swipeIndex + 1} / ${swipeQueue.length}</div>
+      <div class="swipe-hint-side">右スワイプ <span class="hint-o">◯</span></div>
+    </div>
+    <div class="card-arena">
+      ${ghosts}
+      <div class="swipe-card" id="swipe-card">
+        <div class="swipe-card-inner ${swipeFlipped ? 'flipped' : ''}" id="swipe-inner">
+          <div class="card-face front">
+            <div class="stamp-overlay ok-stamp" id="stamp-ok">◯</div>
+            <div class="stamp-overlay ng-stamp" id="stamp-ng">✕</div>
+            <div class="fc-lang-label">${frontLabel}</div>
+            <div class="fc-text">${frontText}</div>
+            ${catTag}
+            <div class="fc-hint">タップして裏面を見る</div>
+          </div>
+          <div class="card-face back">
+            <div class="fc-lang-label">${backLabel}</div>
+            <div class="fc-text">${backText}</div>
+            ${catTag}
+            <div class="fc-hint">タップして表面に戻る</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="swipe-btns">
+      <button class="swipe-action-btn ng" onclick="judgeCard('ng')" title="✕ 不正解">✕</button>
+      <button class="swipe-action-btn flip" onclick="flipSwipeCard()" title="裏返す">↩︎</button>
+      <button class="swipe-action-btn ok" onclick="judgeCard('ok')" title="◯ 正解">◯</button>
+    </div>
+  `;
+
+  attachSwipeDrag();
+  updateScoreBar();
+}
+
+function flipSwipeCard() {
+  swipeFlipped = !swipeFlipped;
+  const inner = document.getElementById('swipe-inner');
+  if (inner) inner.classList.toggle('flipped', swipeFlipped);
+}
+
+function judgeCard(verdict) {
+  const card = swipeQueue[swipeIndex];
+  if (!card) return;
+  if (verdict === 'ok') swipeOK.push(card); else swipeNG.push(card);
+  swipeIndex++;
+  swipeFlipped = false;
+  updateScoreBar();
+  setTimeout(() => renderSwipe(), 60);
+}
+
+// ─── Drag / Swipe ──────────────────────────────
+function removeDragListeners() {
+  if (boundMoveHandler) {
+    document.removeEventListener('mousemove', boundMoveHandler);
+    document.removeEventListener('touchmove', boundMoveHandler);
+    document.removeEventListener('mouseup',   boundEndHandler);
+    document.removeEventListener('touchend',  boundEndHandler);
+  }
+  boundMoveHandler = null;
+  boundEndHandler  = null;
+  dragActive = false;
+}
+
+function attachSwipeDrag() {
+  const card = document.getElementById('swipe-card');
+  if (!card) return;
+
+  dragActive = false; dragCurX = 0; dragCurY = 0;
+  let didDrag = false;
+
+  function onStart(e) {
+    const pt = e.touches ? e.touches[0] : e;
+    dragStartX = pt.clientX; dragStartY = pt.clientY;
+    dragCurX = 0; dragCurY = 0; didDrag = false;
+    dragActive = true;
+  }
+
+  function onMove(e) {
+    if (!dragActive) return;
+    if (e.cancelable) e.preventDefault();
+    const pt = e.touches ? e.touches[0] : e;
+    dragCurX = pt.clientX - dragStartX;
+    dragCurY = pt.clientY - dragStartY;
+    if (Math.abs(dragCurX) > 8) didDrag = true;
+
+    const rot = dragCurX * 0.07;
+    card.style.transform  = `translate(${dragCurX}px, ${dragCurY * 0.35}px) rotate(${rot}deg)`;
+    card.style.transition = 'none';
+
+    const stampOK = document.getElementById('stamp-ok');
+    const stampNG = document.getElementById('stamp-ng');
+    if (stampOK && stampNG) {
+      stampOK.style.opacity = dragCurX > 40 ? Math.min((dragCurX - 40) / 60, 1) : 0;
+      stampNG.style.opacity = dragCurX < -40 ? Math.min((-dragCurX - 40) / 60, 1) : 0;
+    }
+  }
+
+  function onEnd() {
+    if (!dragActive) return;
+    dragActive = false;
+    const threshold = 90;
+    if (dragCurX > threshold) {
+      flyCard(card, 'right');
+    } else if (dragCurX < -threshold) {
+      flyCard(card, 'left');
+    } else {
+      card.style.transition = 'transform 0.35s cubic-bezier(0.34,1.56,0.64,1)';
+      card.style.transform  = '';
+      const stampOK = document.getElementById('stamp-ok');
+      const stampNG = document.getElementById('stamp-ng');
+      if (stampOK) stampOK.style.opacity = 0;
+      if (stampNG) stampNG.style.opacity = 0;
+      setTimeout(() => { card.style.transition = ''; }, 350);
+    }
+  }
+
+  card.addEventListener('click', () => { if (!didDrag) flipSwipeCard(); });
+  card.addEventListener('mousedown', onStart);
+  card.addEventListener('touchstart', onStart, { passive: true });
+
+  boundMoveHandler = onMove;
+  boundEndHandler  = onEnd;
+  document.addEventListener('mousemove', boundMoveHandler);
+  document.addEventListener('touchmove', boundMoveHandler, { passive: false });
+  document.addEventListener('mouseup',   boundEndHandler);
+  document.addEventListener('touchend',  boundEndHandler);
+}
+
+function flyCard(card, dir) {
+  removeDragListeners();
+  const xTarget = dir === 'right' ? '140vw' : '-140vw';
+  const rot     = dir === 'right' ? '28deg' : '-28deg';
+  card.classList.add('is-flying');
+  card.style.transition = 'transform 0.38s cubic-bezier(0.4,0,1,1), opacity 0.38s';
+  card.style.transform  = `translateX(${xTarget}) rotate(${rot})`;
+  card.style.opacity    = '0';
+  setTimeout(() => judgeCard(dir === 'right' ? 'ok' : 'ng'), 300);
+}
+
+// ─── Result screen ────────────────────────────
+function showResult() {
+  removeDragListeners();
+  const main  = document.getElementById('fc-main');
+  const total = swipeOK.length + swipeNG.length;
+  const pct   = total > 0 ? Math.round((swipeOK.length / total) * 100) : 0;
+  const emoji = pct >= 90 ? '🏆' : pct >= 70 ? '🌟' : pct >= 50 ? '💪' : '📚';
+
+  main.innerHTML = `
+    <div class="result-screen">
+      <div style="font-size:3rem;margin-bottom:0.5rem">${emoji}</div>
+      <h2>セッション完了！</h2>
+      <p>正解率 <strong>${pct}%</strong>${isRetryMode ? '（再テスト）' : ''}</p>
+      <div class="result-stats">
+        <div class="result-stat"><div class="num num-ok">${swipeOK.length}</div><div class="lbl">◯ 正解</div></div>
+        <div class="result-stat"><div class="num num-ng">${swipeNG.length}</div><div class="lbl">✕ 不正解</div></div>
+      </div>
+      <div class="result-btns">
+        ${swipeNG.length > 0
+          ? `<button class="btn btn-primary" onclick="startRetry()">🔁 ✕のみ再テスト（${swipeNG.length}枚）</button>`
+          : '<div style="color:var(--sage);font-weight:500;padding:0.5rem">🎉 全問正解！</div>'}
+        <button class="btn btn-outline" onclick="applyFilters()">↺ 最初から</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('fc-progress').style.width = '100%';
+  updateScoreBar();
+}
+
+// ═══════════════════════════════════════════════
+// CLASSIC MODE
+// ═══════════════════════════════════════════════
+function renderClassic() {
+  const main = document.getElementById('fc-main');
+  document.getElementById('score-bar').style.display = 'none';
+
+  if (!fcCards.length) {
+    main.innerHTML = `
+      <div class="fc-empty">
+        <div class="icon">🃏</div>
+        <p>このカテゴリにカードがありません</p>
+        <p style="font-size:0.78rem;margin-top:0.3rem">カードを追加タブから登録しましょう</p>
+      </div>
+      <div class="fc-nav">
+        <button class="nav-btn" disabled>←</button>
+        <span class="nav-counter">— / —</span>
+        <button class="nav-btn" disabled>→</button>
+      </div>`;
+    document.getElementById('fc-progress').style.width = '0%';
+    return;
+  }
+
+  const card = fcCards[fcIndex];
+  const frontText  = startLang === 'fr' ? card.fr : card.ja;
+  const backText   = startLang === 'fr' ? card.ja : card.fr;
+  const frontLabel = startLang === 'fr' ? '🇫🇷 Français' : '🇯🇵 日本語';
+  const backLabel  = startLang === 'fr' ? '🇯🇵 日本語' : '🇫🇷 Français';
+  const catTag     = card.cat ? `<span class="fc-category">${card.cat}</span>` : '';
+
+  main.innerHTML = `
+    <div class="fc-wrapper" onclick="flipClassic()">
+      <div class="fc-inner ${fcFlipped ? 'flipped' : ''}" id="fc-inner">
+        <div class="fc-face-classic front">
+          <div class="fc-lang-label">${frontLabel}</div>
+          <div class="fc-text">${frontText}</div>
+          ${catTag}
+          <div class="fc-hint">クリックして裏面を見る</div>
+        </div>
+        <div class="fc-face-classic back">
+          <div class="fc-lang-label">${backLabel}</div>
+          <div class="fc-text">${backText}</div>
+          ${catTag}
+          <div class="fc-hint">クリックして表面に戻る</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button class="nav-btn" onclick="navigateClassic(-1)" ${fcIndex===0?'disabled':''}>←</button>
+      <span class="nav-counter">${fcIndex+1} / ${fcCards.length}</span>
+      <button class="nav-btn" onclick="navigateClassic(1)" ${fcIndex===fcCards.length-1?'disabled':''}>→</button>
+    </div>
+  `;
+
+  const pct = fcCards.length > 1 ? (fcIndex / (fcCards.length - 1)) * 100 : 100;
+  document.getElementById('fc-progress').style.width = pct + '%';
+}
+
+function flipClassic() {
+  fcFlipped = !fcFlipped;
+  const inner = document.getElementById('fc-inner');
+  if (inner) inner.classList.toggle('flipped', fcFlipped);
+}
+
+function navigateClassic(dir) {
+  fcIndex = Math.max(0, Math.min(fcCards.length - 1, fcIndex + dir));
+  fcFlipped = false;
+  renderClassic();
+}
+
+// ═══════════════════════════════════════════════
+// AUDIO
+// ═══════════════════════════════════════════════
+function speakCurrent(lang) {
+  let text = '';
+  if (currentMode === 'swipe') {
+    if (!swipeQueue.length || swipeIndex >= swipeQueue.length) return;
+    text = lang === 'fr' ? swipeQueue[swipeIndex].fr : swipeQueue[swipeIndex].ja;
+  } else {
+    if (!fcCards.length) return;
+    text = lang === 'fr' ? fcCards[fcIndex].fr : fcCards[fcIndex].ja;
+  }
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = lang === 'fr' ? 'fr-FR' : 'ja-JP';
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+
+// ═══════════════════════════════════════════════
+// LIST
+// ═══════════════════════════════════════════════
+function renderList() {
+  const cat      = document.getElementById('list-cat-filter').value;
+  const filtered = cat ? cards.filter(c => c.cat === cat) : [...cards];
+  const list     = document.getElementById('card-list');
+  if (!filtered.length) { list.innerHTML = '<div class="empty-list">カードがありません</div>'; return; }
+  list.innerHTML = filtered.map(c => `
+    <div class="card-item" id="item-${c.id}">
+      <div class="card-item-texts">
+        <div class="card-item-fr">${c.fr}</div>
+        <div class="card-item-ja">${c.ja}</div>
+      </div>
+      <div class="card-item-meta">
+        ${c.cat ? `<span class="cat-badge" style="cursor:default">${c.cat}</span>` : ''}
+        <button class="btn-delete" onclick="deleteCard(${c.id})">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function deleteCard(id) {
+  cards = cards.filter(c => c.id !== id);
+  save();
+  refreshCatFilter('list-cat-filter');
+  renderList();
+  showToast('カードを削除しました');
+}
+
+function exportCards() {
+  const cat      = document.getElementById('list-cat-filter').value;
+  const filtered = cat ? cards.filter(c => c.cat === cat) : [...cards];
+  const csv = 'FR,JA,カテゴリ\n' + filtered.map(c =>
+    `"${c.fr.replace(/"/g,'""')}","${c.ja.replace(/"/g,'""')}","${c.cat}"`).join('\n');
+  const blob = new Blob(['\uFEFF'+csv], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'cartes-eclair.csv';
+  a.click();
+}
+
+// ═══════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ═══════════════════════════════════════════════
+// KEYBOARD
+// ═══════════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('panel-flash').classList.contains('active')) return;
+  if (currentMode === 'swipe') {
+    if (e.key === 'ArrowRight') judgeCard('ok');
+    if (e.key === 'ArrowLeft')  judgeCard('ng');
+    if (e.key === ' ') { e.preventDefault(); flipSwipeCard(); }
+  } else {
+    if (e.key === 'ArrowLeft')  navigateClassic(-1);
+    if (e.key === 'ArrowRight') navigateClassic(1);
+    if (e.key === ' ') { e.preventDefault(); flipClassic(); }
+  }
+});
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+updateCatDatalist();
+renderCatSuggestions();
+</script>
+</body>
+</html>
